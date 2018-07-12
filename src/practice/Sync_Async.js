@@ -13,5 +13,4 @@ fs.readFile('SyncData.txt', {encoding:'utf8'}, function(err, data) {
 });
 
 console.log(4);
-
 // console 1 > 2 > 4 > 3
