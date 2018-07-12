@@ -4,7 +4,8 @@
   "description": "nodejs tutorials",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=development  NODE_PATH= node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/kdilot/nodejs#readme",
   "dependencies": {
+    "cross-env": "^5.2.0",
     "express": "^4.16.3",
     "jade": "^1.11.0",
     "pug": "^2.0.3",
