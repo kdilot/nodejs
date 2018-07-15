@@ -1,12 +1,24 @@
 const exp = require('express');
 const fs = require('fs');
-const app = exp();
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, __dirname + '/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+        // cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+const upload = multer({ storage: storage })
+const app = exp();
 
 app.use(bodyParser.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
 app.set('views', __dirname + '/views_file');
-app.set('view engine', 'jade'); //  called jade engine
+app.set('view engine', 'pug'); //  called pug engine
 app.locals.pretty = true;   //  make pretty code
+app.use('/user', exp.static('uploads'));    // user are able to access to uploaded file
 
 app.listen(3000, function () {
     console.log('Connected, 3000 port.');
@@ -17,7 +29,7 @@ app.get('/topic/new', function (req, res) {
         if (err) {
             res.status(500).send('Internal Server Error');
         } else {
-            res.render('new', {topics:files});
+            res.render('new', { topics: files });
         }
     });
 });
@@ -49,4 +61,13 @@ app.post('/topic', function (req, res) {
     fs.writeFile(__dirname + '/data/' + title, des, function (err) {
         err ? res.status(500).send('Internal Server Error') : res.redirect('/topic');
     });
+});
+
+app.get('/upload', function (req, res) {
+    res.render('upload');
+});
+
+app.post('/upload', upload.single('userfile'), function (req, res) {
+    console.log(req.file);
+    res.send('uploaded : ' + req.file.filename);
 });
