@@ -1,10 +1,12 @@
 // issue with Error: EPERM: operation not permitted, rename
 
-let exp = require('express');
-let app = exp();
-let session = require('express-session');
-let bodyPaser = require('body-parser');
-let FileStore = require('session-file-store')(session); // way to save session information at File.
+const exp = require('express');
+const app = exp();
+const session = require('express-session');
+const bodyPaser = require('body-parser');
+const FileStore = require('session-file-store')(session); // way to save session information at File.
+const sha256 = require('sha256');
+const salt = '#&$&$#HDDHSdhfsedjsa';
 
 app.use(bodyPaser.urlencoded({ extended: false }));
 app.use(session({
@@ -45,14 +47,14 @@ app.get('/auth/login', function (req, res) {
     res.send(output);
 });
 
-var users = [{ id: 'user', pw: '1234', displayName: 'USER' }];
+var users = [{ id: 'user', pw: sha256('1234' + salt), displayName: 'USER' }];
 
 app.post('/auth/login', function (req, res) {
     let id = req.body.id;
     let pw = req.body.pw;
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
-        if (id === user.id && pw === user.pw) {
+        if (id === user.id && sha256(pw + salt) === user.pw) {
             req.session.displayName = user.displayName;
             return req.session.save(function () {
                 res.redirect('/welcome');
@@ -98,7 +100,7 @@ app.get('/auth/register', function (req, res) {
 app.post('/auth/register', function (req, res) {
     let user = {
         id: req.body.id,
-        pw: req.body.pw,
+        pw: sha256(req.body.pw + salt),
         displayName: req.body.pdn
     }
     users.push(user);
