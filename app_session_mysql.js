@@ -1,8 +1,8 @@
-let exp = require('express');
-let app = exp();
-let session = require('express-session');
-let bodyPaser = require('body-parser');
-let MysqlStore = require('express-mysql-session')(session); // way to save session information at Mysql DB.
+const exp = require('express');
+const app = exp();
+const session = require('express-session');
+const bodyPaser = require('body-parser');
+const MysqlStore = require('express-mysql-session')(session); // way to save session information at Mysql DB.
 
 app.use(bodyPaser.urlencoded({ extended: false }));
 app.use(session({
