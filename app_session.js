@@ -1,15 +1,17 @@
-let exp = require('express');
-let app = exp();
-let session = require('express-session');
-let bodyPaser = require('body-parser');
-let FileStore = require('session-file-store')(session); // way to save session information at File.
+const exp = require('express');
+const app = exp();
+const session = require('express-session');
+const bodyPaser = require('body-parser');
+const FileStore = require('session-file-store')(session); // way to save session information at File.
+const sha256 = require('sha256');
+const salt = '#&$&$#HDDHSdhfsedjsa';
 
 app.use(bodyPaser.urlencoded({ extended: false }));
 app.use(session({
     secret: 'sessionKey',
     resave: false,
     saveUninitialized: true,
-    store:new FileStore() // way to save session information at File.
+    store: new FileStore() // way to save session information at File.
 }));
 
 app.listen(3003, function () {
@@ -44,10 +46,10 @@ app.get('/auth/login', function (req, res) {
 });
 
 app.post('/auth/login', function (req, res) {
-    let user = { id: 'user', pw: '1234', displayName: 'USER' };
+    let user = { id: 'user', pw: 'b85bbc5640ed9aa903a9c10dc0fab83a', displayName: 'USER' };
     let id = req.body.id;
     let pw = req.body.pw;
-    if (id === user.id && pw === user.pw) {
+    if (id === user.id && sha256(pw + salt) === user.pw) {
         req.session.displayName = user.displayName;
         res.redirect('/welcome');
     } else {
@@ -64,6 +66,9 @@ app.get('/welcome', function (req, res) {
 });
 
 app.get('/auth/logout', function (req, res) {
-    if (req.session.displayName) delete req.session.displayName;
-    res.redirect('/welcome');
+    if (req.session.displayName)
+        delete req.session.displayName;
+    req.session.save(function () {
+        res.redirect('/welcome');
+    });
 });
