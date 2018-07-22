@@ -7,11 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=development  NODE_PATH= supervisor app_mysql.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kdilot/nodejs.git"
-  },
-  "author": "",
+  "repository": "git+https://github.com/kdilot/nodejs.git",
+  "author": "kdilot <kdilot@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kdilot/nodejs/issues"
