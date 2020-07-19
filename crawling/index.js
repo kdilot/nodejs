@@ -24,6 +24,7 @@ const crawler = async () => {
     await page.waitForNavigation()
     // await page.goto('https://www.amipure.com/mypage/index.php') // 마이페이지
 
+    //  상품 주문페이지
     await page.goto(
         'http://www.amipure.com/goods/goods_view.php?goodsNo=1000000035&mtn=8%5E%7C%5EPC%EB%A9%94%EC%9D%B8+-+%ED%81%90%EB%A0%88%EC%9D%B4%EC%85%981%5E%7C%5En'
     )
